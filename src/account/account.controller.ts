@@ -13,7 +13,6 @@ import { CreateAccountDto } from './dtos/createAccount.dto';
 export class AccountController {
   constructor(private accountService: AccountService) {}
 
-  @UsePipes(ValidationPipe)
   @Post()
   public async create(@Body() createAccount: CreateAccountDto): Promise<any> {
     if (!createAccount.name || !createAccount.accountType)

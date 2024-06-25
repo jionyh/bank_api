@@ -19,10 +19,6 @@ export class UserService {
     return createUser;
   }
 
-  public async show(): Promise<User[]> {
-    return await this.prismaService.user.findMany();
-  }
-
   public async findByEmail(email: string): Promise<User | null> {
     const findUserByEmail = await this.prismaService.user.findFirst({
       where: { email },

@@ -11,7 +11,7 @@ import { UserService } from 'src/user/user.service';
 
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthRequest } from './models/authRequest';
-import { IsPublic } from './decorators/is-public.decorator';
+import { IsPublic } from '../decorators/is-public.decorator';
 
 @Controller()
 export class AuthController {

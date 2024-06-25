@@ -13,7 +13,7 @@ export class AuthService {
   ) {}
 
   public async validateUser(email: string, password: string) {
-    const userByEmail = await this.userService.findByEmail(email);
+    const userByEmail = await this.userService.findByEmail(email.toLowerCase());
     if (userByEmail) {
       const isMatch = await compare(password, userByEmail?.password || '');
       if (isMatch) {

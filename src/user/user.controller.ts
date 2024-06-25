@@ -10,17 +10,19 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dtos/createUser.dto';
 import { User } from '@prisma/client';
+import { CurrentUser } from 'src/decorators/current-user.decorator';
+import { IsPublic } from 'src/decorators/is-public.decorator';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Get()
-  public async show(): Promise<User[]> {
-    return this.userService.show();
+  @Get('/me')
+  public async show(@CurrentUser()user:User): Promise<User> {
+    return user
   }
 
-  @UsePipes(ValidationPipe)
+  @IsPublic()
   @Post('/signup')
   public async create(@Body() createUser: CreateUserDto): Promise<User> {
     if (!createUser?.email || !createUser?.password)
