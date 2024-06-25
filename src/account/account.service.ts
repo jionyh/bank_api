@@ -11,19 +11,26 @@ export class AccountService {
     return await this.prismaService.account.create({ data });
   }
 
-  public async findById(id:number):Promise<Account|null>{
-    return await this.prismaService.account.findFirst({where:{id}})
+  public async find(user_id: number): Promise<Account[]> {
+    return await this.prismaService.account.findMany({
+      where: { user_id },
+      orderBy: { name: 'asc' },
+    });
   }
 
-  public async update(param:{
-    id:number,
-    data:Prisma.AccountUpdateInput
-  }):Promise<Account>{
-    const {id,data} = param
-    const updatedAccount =  await this.prismaService.account.update({
-      where:{id},
-      data
-    })
-    return updatedAccount
+  public async findById(id: number): Promise<Account | null> {
+    return await this.prismaService.account.findFirst({ where: { id } });
+  }
+
+  public async update(param: {
+    id: number;
+    data: Prisma.AccountUpdateInput;
+  }): Promise<Account> {
+    const { id, data } = param;
+    const updatedAccount = await this.prismaService.account.update({
+      where: { id },
+      data,
+    });
+    return updatedAccount;
   }
 }
