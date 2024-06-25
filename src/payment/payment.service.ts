@@ -13,17 +13,19 @@ export class PaymentService {
   }
 
   public async find(params:{
-    id:number,
-    startDate:Date,
-    endDate:Date,
+    account_id:number,
+    startDate?:string,
+    endDate?:string,
   }):Promise<Payments[]>{
+    const filterOptions = {
+      //Adicionar lib date-fns depois
+      lte: params.endDate ? new Date(`${params.endDate}T20:59:59.999Z`) : undefined,
+      gte: params.startDate ? new Date(`${params.startDate}T03:59:59.999Z`) : undefined,
+    }
     return await this.prismaService.payments.findMany({
       where:{
-        id:params.id,
-        date:{
-          gte: params.endDate,
-          lte: params.startDate,
-        }
+        account_id:params.account_id,
+        date:filterOptions
       },
     })
   }
