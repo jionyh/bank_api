@@ -8,13 +8,18 @@ import {
 } from '@nestjs/common';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dtos/createAccount.dto';
+import { CurrentUser } from 'src/decorators/current-user.decorator';
+import { Account, Prisma, User } from '@prisma/client';
 
 @Controller('account')
 export class AccountController {
   constructor(private accountService: AccountService) {}
 
   @Post()
-  public async create(@Body() createAccount: CreateAccountDto): Promise<any> {
+  public async create(
+    @Body() createAccount: CreateAccountDto,
+    @CurrentUser() user:User
+  ): Promise<Account> {
     if (!createAccount.name || !createAccount.accountType)
       throw new BadRequestException(
         'Account name and account type is required',
@@ -22,6 +27,11 @@ export class AccountController {
     if (createAccount.balance < 0)
       throw new BadRequestException('Balance cant be negative');
 
-    //return await this.accountService.create(createAccount);
+    const createAccountData : CreateAccountDto = {
+      ...createAccount,
+      user_id: user.id
+    }
+
+    return await this.accountService.create(createAccountData);
   }
 }

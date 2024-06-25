@@ -7,7 +7,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UserService } from 'src/user/user.service';
 
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthRequest } from './models/authRequest';
@@ -17,7 +16,6 @@ import { IsPublic } from '../decorators/is-public.decorator';
 export class AuthController {
   constructor(
     private authService: AuthService,
-    private userService: UserService,
   ) {}
 
   @IsPublic()

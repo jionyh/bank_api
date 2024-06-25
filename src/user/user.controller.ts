@@ -19,7 +19,7 @@ export class UserController {
 
   @Get('/me')
   public async show(@CurrentUser()user:User): Promise<User> {
-    return user
+    return await this.userService.findById(user.id)
   }
 
   @IsPublic()

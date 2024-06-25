@@ -25,4 +25,20 @@ export class UserService {
     });
     return findUserByEmail;
   }
+
+  public async findById(id: number): Promise<User | null> {
+    const findUserById = await this.prismaService.user.findFirst({
+      where: { id },
+      select:{
+        id:true,
+        email:true,
+        Account:true
+      },
+    });
+    const returnedUser:User = {
+      ...findUserById,
+      password:undefined
+    }
+    return returnedUser;
+  }
 }
