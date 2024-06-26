@@ -1,15 +1,14 @@
-import { IsNumber, IsPositive, IsString, Min } from "class-validator"
+import { IsNumber, IsString } from 'class-validator';
 
-export class CreatePaymentDto{
-@IsNumber()
-account_id:number
+export class CreatePaymentDto {
+  @IsNumber()
+  account_id: number;
 
-@IsNumber()
-@IsPositive({ message: "Payment amount can't be Negative" })
-amount:number
+  @IsNumber()
+  amount: number;
 
-@IsString()
-description:string
+  @IsString()
+  description: string;
 
-imageUrl?:string
+  imageUrl?: string;
 }

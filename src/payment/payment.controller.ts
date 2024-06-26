@@ -3,12 +3,16 @@ import {
   Body,
   Controller,
   NotFoundException,
+  ParseFilePipe,
   Post,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
-import { CreatePaymentDto } from './dtos/createPayment.dto';
 import { Payments } from '@prisma/client';
 import { AccountService } from 'src/account/account.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { PaymentDto } from './dtos/payment.dto';
 
 @Controller('payment')
 export class PaymentController {
@@ -18,25 +22,40 @@ export class PaymentController {
   ) {}
 
   @Post('/create')
+  @UseInterceptors(FileInterceptor('image'))
   public async create(
-    @Body() createPayment: CreatePaymentDto,
+    @Body() createPayment: PaymentDto,
+    @UploadedFile(new ParseFilePipe())
+    file: Express.Multer.File,
   ): Promise<Payments> {
     console.log(createPayment);
-    const account = await this.accountService.findById(
-      createPayment.account_id,
-    );
+    console.log('file', file);
+    const account_id = +createPayment.account_id;
+    const amount = parseFloat(createPayment.amount);
+
+    const account = await this.accountService.findById(account_id);
     if (!account) throw new NotFoundException('Account not found');
-    if (account && account.balance < createPayment.amount)
+    if (account && account.balance < amount)
       throw new BadRequestException('Insufficient balance');
 
+    const upload = await this.paymentService.upload(
+      file.originalname,
+      file.buffer,
+    );
+
     await this.accountService.update({
-      id: createPayment.account_id,
+      id: account_id,
       data: {
         ...account,
-        balance: account.balance - createPayment.amount,
+        balance: account.balance - amount,
       },
     });
-    const payment = await this.paymentService.create(createPayment);
+    const payment = await this.paymentService.create({
+      account_id,
+      amount,
+      description: createPayment.description,
+      imageUrl: upload,
+    });
     return payment;
   }
 }
