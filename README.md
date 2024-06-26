@@ -45,17 +45,15 @@ $ pnpm run start:dev
 $ pnpm run start:prod
 ```
 
-## Test
+## .env
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+DATABASE_URL=
+JWT_SECRET=
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_REGION=
+AWS_S3_BUCKET_NAME=
 ```
 
 ## Support
